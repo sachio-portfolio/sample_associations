@@ -22,14 +22,17 @@ class BlogsController < ApplicationController
   # POST /blogs or /blogs.json
   def create
     @blog = Blog.new(blog_params)
-
-    respond_to do |format|
-      if @blog.save
-        format.html { redirect_to @blog, notice: "Blog was successfully created." }
-        format.json { render :show, status: :created, location: @blog }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @blog.errors, status: :unprocessable_entity }
+    if params[:back]
+      render :new
+    else
+      respond_to do |format|
+        if @blog.save
+          format.html { redirect_to @blog, notice: "Blog was successfully created." }
+          format.json { render :show, status: :created, location: @blog }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @blog.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -55,7 +58,11 @@ class BlogsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  def confirm
+    @blog = Blog.new(blog_params)
+    binding.pry
+    render :new if @blog.invalid?
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_blog
