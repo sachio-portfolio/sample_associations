@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root 'sessions#new'
+  resources :favorites
   resources :sessions
   resources :blogs do
     collection do
